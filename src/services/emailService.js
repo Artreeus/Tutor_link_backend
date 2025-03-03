@@ -12,25 +12,25 @@
  * @returns {Promise<boolean>} - Success indicator
  */
 const sendEmail = async (options) => {
-    // In a real implementation, you would send an actual email
-    console.log('Sending email to:', options.to);
-    console.log('Subject:', options.subject);
-    console.log('Text:', options.text);
-    
-    // Return true to simulate successful sending
-    return true;
-  };
-  
-  /**
-   * Send booking confirmation email
-   * @param {string} email - Recipient email
-   * @param {string} name - Recipient name
-   * @param {Object} bookingDetails - Booking details
-   * @returns {Promise<boolean>} - Success indicator
-   */
-  const sendBookingConfirmation = async (email, name, bookingDetails) => {
-    const subject = 'Booking Confirmation - TutorLink';
-    const text = `
+  // In a real implementation, you would send an actual email
+  console.log("Sending email to:", options.to);
+  console.log("Subject:", options.subject);
+  console.log("Text:", options.text);
+
+  // Return true to simulate successful sending
+  return true;
+};
+
+/**
+ * Send booking confirmation email
+ * @param {string} email - Recipient email
+ * @param {string} name - Recipient name
+ * @param {Object} bookingDetails - Booking details
+ * @returns {Promise<boolean>} - Success indicator
+ */
+const sendBookingConfirmation = async (email, name, bookingDetails) => {
+  const subject = "Booking Confirmation - TutorLink";
+  const text = `
       Hello ${name},
       
       Your booking with ${bookingDetails.tutorName} for ${bookingDetails.subject} 
@@ -39,22 +39,41 @@ const sendEmail = async (options) => {
       
       Thank you for using TutorLink!
     `;
-    
-    return sendEmail({
-      to: email,
-      subject,
-      text
-    });
-  };
-  
-  /**
-   * Send payment confirmation email
-   * @param {string} email - Recipient email
-   * @param {string} name - Recipient name
-   * @param {Object} paymentDetails - Payment details
-   * @returns {Promise<boolean>} - Success indicator
-   */
-  const sendPaymentConfirmation = async (email, name, paymentDetails) => {
-    const subject = 'Payment Confirmation - TutorLink';
-    const text = `
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+  });
+};
+
+module.exports = {
+  sendEmail,
+  sendBookingConfirmation,
+  sendPaymentConfirmation,
+};
+
+/**
+ * Send payment confirmation email
+ * @param {string} email - Recipient email
+ * @param {string} name - Recipient name
+ * @param {Object} paymentDetails - Payment details
+ * @returns {Promise<boolean>} - Success indicator
+ */
+const sendPaymentConfirmation = async (email, name, paymentDetails) => {
+  const subject = "Payment Confirmation - TutorLink";
+  const text = `
       Hello ${name},
+      
+      Your payment of ${paymentDetails.amount} for booking ID ${paymentDetails.bookingId} 
+      has been confirmed.
+      
+      Thank you for using TutorLink!
+    `;
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+  });
+};
