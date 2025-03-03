@@ -11,15 +11,15 @@
  * @param {string} [options.html] - Email HTML content
  * @returns {Promise<boolean>} - Success indicator
  */
-const sendEmail = async (options) => {
-  // In a real implementation, you would send an actual email
-  console.log("Sending email to:", options.to);
-  console.log("Subject:", options.subject);
-  console.log("Text:", options.text);
+async function sendEmail(options) {
+    // In a real implementation, you would send an actual email
+    console.log("Sending email to:", options.to);
+    console.log("Subject:", options.subject);
+    console.log("Text:", options.text);
 
-  // Return true to simulate successful sending
-  return true;
-};
+    // Return true to simulate successful sending
+    return true;
+}
 
 /**
  * Send booking confirmation email
@@ -47,12 +47,6 @@ const sendBookingConfirmation = async (email, name, bookingDetails) => {
   });
 };
 
-module.exports = {
-  sendEmail,
-  sendBookingConfirmation,
-  sendPaymentConfirmation,
-};
-
 /**
  * Send payment confirmation email
  * @param {string} email - Recipient email
@@ -76,4 +70,11 @@ const sendPaymentConfirmation = async (email, name, paymentDetails) => {
     subject,
     text,
   });
+};
+
+// ✅ Now export after all functions are defined
+export default {
+  sendEmail,
+  sendBookingConfirmation,
+  sendPaymentConfirmation,
 };
