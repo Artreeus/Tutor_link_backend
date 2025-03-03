@@ -1,13 +1,16 @@
-import mongoose, { Schema, model } from 'mongoose';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { IUser, IUserMethods, UserRole } from '../types/user';
-import config from '../config';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
-// Define the schema with methods
-type UserModelType = mongoose.Model<IUser, {}, IUserMethods>;
+// Define UserRole enum
+const UserRole = {
+  STUDENT: 'student',
+  TUTOR: 'tutor',
+  ADMIN: 'admin'
+};
 
-const UserSchema = new Schema<IUser, UserModelType, IUserMethods>({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please add a name'],
@@ -89,14 +92,17 @@ UserSchema.pre('save', async function(next) {
 UserSchema.methods.getSignedJwtToken = function() {
   return jwt.sign(
     { id: this._id },
-    config.jwtSecret as jwt.Secret,
+    config.jwtSecret,
     { expiresIn: config.jwtExpire }
   );
 };
 
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function(enteredPassword: string) {
+UserSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default model<IUser, UserModelType>('User', UserSchema);
+module.exports = {
+  User: mongoose.model('User', UserSchema),
+  UserRole
+};

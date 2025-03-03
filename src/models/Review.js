@@ -1,20 +1,19 @@
-import { Schema, model } from 'mongoose';
-import { IReview } from '../types/review';
-import User from './User';
+const mongoose = require('mongoose');
+const User = require('./User').User;
 
-const ReviewSchema = new Schema<IReview>({
+const ReviewSchema = new mongoose.Schema({
   student: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   tutor: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   booking: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Booking',
     required: true
   },
@@ -67,14 +66,12 @@ ReviewSchema.statics.getAverageRating = async function(tutorId) {
 
 // Call getAverageRating after save
 ReviewSchema.post('save', function() {
-  // @ts-ignore
   this.constructor.getAverageRating(this.tutor);
 });
 
 // Call getAverageRating after remove
 ReviewSchema.post('remove', function() {
-  // @ts-ignore
   this.constructor.getAverageRating(this.tutor);
 });
 
-export default model<IReview>('Review', ReviewSchema);
+module.exports = mongoose.model('Review', ReviewSchema);

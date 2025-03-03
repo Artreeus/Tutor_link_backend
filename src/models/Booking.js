@@ -1,19 +1,26 @@
-import { Schema, model } from 'mongoose';
-import { IBooking, BookingStatus } from '../types/booking';
+const mongoose = require('mongoose');
 
-const BookingSchema = new Schema<IBooking>({
+// Define BookingStatus enum
+const BookingStatus = {
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled'
+};
+
+const BookingSchema = new mongoose.Schema({
   student: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   tutor: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   subject: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
     required: true
   },
@@ -59,4 +66,7 @@ const BookingSchema = new Schema<IBooking>({
   timestamps: true
 });
 
-export default model<IBooking>('Booking', BookingSchema);
+module.exports = {
+  Booking: mongoose.model('Booking', BookingSchema),
+  BookingStatus
+};

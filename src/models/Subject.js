@@ -1,7 +1,6 @@
-import { Schema, model } from 'mongoose';
-import { ISubject } from '../types/subject';
+const mongoose = require('mongoose');
 
-const SubjectSchema = new Schema<ISubject>({
+const SubjectSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please add a subject name'],
@@ -26,4 +25,4 @@ const SubjectSchema = new Schema<ISubject>({
   timestamps: true
 });
 
-export default model<ISubject>('Subject', SubjectSchema);
+module.exports = mongoose.model('Subject', SubjectSchema);
