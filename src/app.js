@@ -1,10 +1,10 @@
-import express, { Express } from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import morgan from 'morgan';
-import connectDB from './config/db';
-import routes from './routes';
-import { errorHandler } from './middleware/errorHandler';
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const morgan = require('morgan');
+const connectDB = require('./config/db');
+const routes = require('./routes');
+const { errorHandler } = require('./middleware/errorHandler');
 
 // Load env vars
 dotenv.config();
@@ -12,7 +12,7 @@ dotenv.config();
 // Connect to database
 connectDB();
 
-const app: Express = express();
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -33,10 +33,10 @@ app.listen(PORT, () => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err: any) => {
+process.on('unhandledRejection', (err) => {
   console.error(`Error: ${err.message}`);
   // Close server & exit process
   process.exit(1);
 });
 
-export default app;
+module.exports = app;
