@@ -1,17 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
-
-type AsyncFunction = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => Promise<any>;
-
-const asyncHandler = (fn: AsyncFunction) => (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+/**
+ * Async handler to wrap async functions and catch errors
+ * @param {Function} fn - Async function to wrap
+ * @returns {Function} - Express middleware function
+ */
+const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-export default asyncHandler;
+module.exports = asyncHandler;

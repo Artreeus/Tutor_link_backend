@@ -1,8 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
-import { validationResult, ValidationChain } from 'express-validator';
+const { validationResult } = require('express-validator');
 
-export const validate = (validations: ValidationChain[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Validate request using express-validator
+ * @param {Array} validations - Array of validation chains
+ * @returns {Function} - Express middleware function
+ */
+const validate = (validations) => {
+  return async (req, res, next) => {
     await Promise.all(validations.map(validation => validation.run(req)));
 
     const errors = validationResult(req);
@@ -16,3 +20,5 @@ export const validate = (validations: ValidationChain[]) => {
     });
   };
 };
+
+module.exports = { validate };
