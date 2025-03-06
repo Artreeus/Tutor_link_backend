@@ -387,6 +387,12 @@ const confirmPayment = asyncHandler(async (req, res) => {
   }
 });
 
+const getTutorAvailability = (req, res) => {
+  const { tutorId } = req.params;
+  // Your logic to retrieve availability
+  res.json({ tutorId, availability: 'some availability data' });
+};
+
 module.exports = {
   getBookings,
   getBooking,
@@ -395,4 +401,5 @@ module.exports = {
   deleteBooking,
   createPayment,
   confirmPayment,
+  getTutorAvailability
 };

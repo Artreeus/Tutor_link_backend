@@ -7,7 +7,8 @@ const {
   updateBooking,
   deleteBooking,
   createPayment,
-  confirmPayment
+  confirmPayment,
+  getTutorAvailability
 } = require('../controllers/bookingController');
 const { protect, authorize, UserRole } = require('../middleware/auth');
 const { validate } = require('../middleware/validator');
@@ -15,7 +16,10 @@ const { BookingStatus } = require('../models/Booking');
 
 const router = express.Router();
 
-// All booking routes are protected
+// Get tutor availability - public route
+router.get('/availability/:tutorId', getTutorAvailability);
+
+// All other booking routes are protected
 router.use(protect);
 
 router.route('/')

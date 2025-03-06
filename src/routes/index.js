@@ -4,6 +4,7 @@ const userRoutes = require('./userRoutes');
 const subjectRoutes = require('./subjectRoutes');
 const bookingRoutes = require('./bookingRoutes');
 const reviewRoutes = require('./reviewRoutes');
+const calendarRoutes = require('./calendarRoutes');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.use('/users', userRoutes);
 router.use('/subjects', subjectRoutes);
 router.use('/bookings', bookingRoutes);
 router.use('/reviews', reviewRoutes);
+router.use('/calendar', calendarRoutes);
 
 // Health check
 router.get('/health', (req, res) => {

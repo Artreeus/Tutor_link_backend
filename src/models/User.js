@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: 'default.jpg'
+    default: 'https://picsum.photos/150'
   },
   subjects: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -73,7 +73,24 @@ const UserSchema = new mongoose.Schema({
     default: 0
   },
   resetPasswordToken: String,
-  resetPasswordExpire: Date
+  resetPasswordExpire: Date,
+  googleCalendarTokens: {
+    access_token: String,
+    refresh_token: String,
+    expiry_date: Number
+  },
+  totalEarnings: {
+    type: Number,
+    default: 0
+  },
+  pendingEarnings: {
+    type: Number,
+    default: 0
+  },
+  completedBookings: {
+    type: Number,
+    default: 0
+  }
 }, {
   timestamps: true
 });
