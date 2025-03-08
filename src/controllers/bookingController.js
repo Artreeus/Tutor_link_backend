@@ -387,6 +387,90 @@ const confirmPayment = asyncHandler(async (req, res) => {
   }
 });
 
+const processDirectPayment = asyncHandler(async (req, res) => {
+  const booking = await Booking.findById(req.params.id);
+
+  if (!booking) {
+    return res.status(404).json({
+      success: false,
+      message: `Booking not found with id of ${req.params.id}`,
+    });
+  }
+
+  // Make sure user is the student who booked
+  if (booking.student.toString() !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: "Not authorized to make payment for this booking",
+    });
+  }
+
+  // Check if booking is already paid
+  if (booking.paymentStatus === "paid") {
+    return res.status(400).json({
+      success: false,
+      message: "This booking is already paid",
+    });
+  }
+
+  try {
+    // Update booking with payment information
+    booking.paymentStatus = "paid";
+    booking.status = "confirmed";
+    await booking.save();
+
+    // Get user details for email notifications
+    const student = await User.findById(booking.student);
+    const tutor = await User.findById(booking.tutor);
+    const subject = await Subject.findById(booking.subject);
+
+    // Send email notifications (if you have this functionality)
+    if (student && tutor) {
+      // Send payment confirmation to student
+      try {
+        await EmailService.sendPaymentConfirmation(student.email, student.name, {
+          amount: booking.price,
+          bookingId: booking._id.toString(),
+        });
+
+        // Send booking confirmation to student
+        await EmailService.sendBookingConfirmation(student.email, student.name, {
+          tutorName: tutor.name,
+          subject: subject ? subject.name : 'Tutoring Session',
+          date: new Date(booking.date).toLocaleDateString(),
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+        });
+
+        // Send notification to tutor
+        await EmailService.sendNewBookingNotification(tutor.email, tutor.name, {
+          studentName: student.name,
+          subject: subject ? subject.name : 'Tutoring Session',
+          date: new Date(booking.date).toLocaleDateString(),
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+        });
+      } catch (emailError) {
+        console.error('Email sending error:', emailError);
+        // Continue anyway, email failure shouldn't stop the process
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Payment processed successfully",
+      data: booking,
+    });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error processing payment",
+    });
+  }
+});
+
+
 const getTutorAvailability = (req, res) => {
   const { tutorId } = req.params;
   // Your logic to retrieve availability
@@ -401,5 +485,6 @@ module.exports = {
   deleteBooking,
   createPayment,
   confirmPayment,
-  getTutorAvailability
+  getTutorAvailability,
+  processDirectPayment
 };

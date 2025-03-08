@@ -63,4 +63,10 @@ router.put(
   confirmPayment
 );
 
+router.put(
+  '/:id/pay',
+  authorize(UserRole.STUDENT),
+  processDirectPayment
+);
+
 module.exports = router;
